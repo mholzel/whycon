@@ -5,3 +5,9 @@
 # Ignore the generated video and log files 
 *.avi
 *.txt
+
+# Ignore Eclipse project files
+.cproject
+.project
+.settings/
+
