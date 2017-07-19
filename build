@@ -1,0 +1,24 @@
+# Get the SDL libs and other stuff (on my system, yes you need 
+# these 3 redundant SDL libs to get it working out of the box)
+		apt-get update \
+	&& \
+		apt-get install -y \
+			libsdl1.2-dev \
+			libsdl-ttf2.0-dev \
+			libsdl2-ttf-dev \
+			git \
+			checkinstall \
+			make \
+			gcc \
+	&& \
+	# Build and install luvcview with checkinstall so that it is easily removable
+		cd luvcview \
+	&& \
+		make \
+	&& \
+		checkinstall -y \
+	&& \
+	# Build whycon
+		cd ../whycon-orig/src/ \
+	&& \
+		make \
