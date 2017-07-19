@@ -72,6 +72,9 @@ int runs = 0;			//number of gui updates/detections performed
 int evalTime = 0;		//time required to detect the patterns
 FILE *robotPositionLog = NULL;	//file to log robot positions
 
+/* You should specify the port number. If you are only running one camera, then this default should be fine. */
+int port = 8123;
+
 /*communication input (camera) and output (socket server)*/
 CCamera* camera;
 CRawImage *image;
@@ -267,8 +270,24 @@ void processKeys()
 	memcpy(lastKeys,keys,keyNumber);
 }
 
-//process command line arguments 
-void processArgs(int argc,char* argv[]) 
+/** Determine if the argument is an integer */
+bool isNumber(char number[])
+{
+    int i = 0;
+    //checking for negative numbers
+    if (number[0] == '-')
+        i = 1;
+    for (; number[i] != 0; i++)
+    {
+        //if (number[i] > '9' || number[i] < '0')
+        if (!isdigit(number[i]))
+            return false;
+    }
+    return true;
+}
+
+//process command line arguments
+void processArgs(int argc,char* argv[])
 {
 	if (argc > 2) numBots = atoi(argv[2]);
 	if (argc > 2) useGui=true;
@@ -276,8 +295,10 @@ void processArgs(int argc,char* argv[])
 		if (strcmp(argv[i],"nogui")==0) useGui=false;
 		if (strcmp(argv[i],"nolog")==0) saveLog=false;
 		if (strcmp(argv[i],"novideo")==0) saveVideo=false;
+		if (isNumber(argv[i])) port=atoi(argv[i]);
 	}
 }
+
 
 int main(int argc,char* argv[])
 {
@@ -290,7 +311,7 @@ int main(int argc,char* argv[])
 	}
 	camera = new CCamera();
 	server = new CPositionServer();
-	server->init("6666"); 
+	server->init(port);
 
 	moveOne = moveVal;
 	moveOne  = 0;
@@ -362,8 +383,12 @@ int main(int argc,char* argv[])
 
 		//pack up the data for sending to other systems
 		server->setNumOfPatterns(numFound,numBots,frameTime);
-		for (int i = 0;i<numBots;i++) server->updatePosition(objectArray[i],i,frameTime);
-		server->clearToSend();
+		for (int i = 0;i<numBots;i++) {
+			if (currentSegmentArray[i].valid){
+				server->updatePosition(objectArray[i],i,frameTime);
+			}
+		}
+		server->clearToSend(currentSegmentArray);
 
 		//draw stuff on the GUI 
 		if (useGui){

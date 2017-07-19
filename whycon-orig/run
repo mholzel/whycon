@@ -1,0 +1,1 @@
+./whycon /dev/video0 1 $1

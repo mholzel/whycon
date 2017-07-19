@@ -39,14 +39,14 @@ class CPositionServer{
 
 		CPositionServer();
 		~CPositionServer();
-		int init(const char* port);
+		int init(int port);
 		int updatePosition(STrackedObject object,int i,int64_t updateTime);
 		int sendInfo(int socket,char *buffer);
 		EServerCommand getCommand();
 		int closeConnection(int socket);
 		void setNumOfPatterns(int numF,int numO,int64_t frameTime);
 		void finishCalibration();
-		void clearToSend();
+		void clearToSend(SSegment *currentSegmentArray);
 		int addConnection(int socket);
 		int removeConnection(int socket);
 

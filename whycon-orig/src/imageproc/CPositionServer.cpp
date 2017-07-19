@@ -70,13 +70,12 @@ void* connectLoop(void *serv)
 	return NULL;
 }
 
-int CPositionServer::init(const char* port)
+int CPositionServer::init(int port)
 {
-	int used_port = atoi(port);
 	struct sockaddr_in mySocketAddr;
 	mySocketAddr.sin_family = AF_INET;
 	mySocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	mySocketAddr.sin_port = htons(used_port);
+	mySocketAddr.sin_port = htons(port);
 	serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (serverSocket < 0)
 	{
@@ -141,16 +140,18 @@ int CPositionServer::sendInfo(int connid,char* buffer)
 	return 0;
 }
 
-void CPositionServer::clearToSend()
+void CPositionServer::clearToSend(SSegment *currentSegmentArray)
 {
 	char buffer[10000];
 
 	/*send robot positions*/
-	sprintf(buffer,"Detected %i of %i at %ld. \n",numFound,numObjects,updateTime);
 	STrackedObject o;
 	for (int i=0;i<numObjects;i++){
-		o=object[i];
-		sprintf(buffer,"%sRobot %03i %.3f %.3f %.3f %ld \n",buffer,o.ID,o.x,o.y,o.yaw*180/M_PI,lastDetectionArray[i]);
+		if (currentSegmentArray[i].valid){
+			o=object[i];
+			o.ID = 0;
+			sprintf(buffer,"%sID %03i %.3f %.3f %.3f %.3f %.3f %.3f %ld \n",buffer,o.ID,o.x,o.y,o.z,o.roll*180/M_PI,o.pitch*180/M_PI,o.yaw*180/M_PI,lastDetectionArray[i]);
+		}
 	}
 	if (calibrationFinished)
 	{
