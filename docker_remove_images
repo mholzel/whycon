@@ -1,0 +1,13 @@
+########################################
+########################################
+#
+# This script removes all of the 
+# images form your computer. Never run
+# this unless you know what you are 
+# doing. DO NOT run this after each 
+# whycon run. Instead, call one of the 
+# remove container scripts
+#
+########################################
+########################################
+docker rm $(docker ps -q -f status=exited)

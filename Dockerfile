@@ -40,13 +40,18 @@ RUN 		apt-get update \
 		make \
 	&& \
 # We don't need a lot of those libraries now. Let's remove them to lighten the container.
-		apt-get purge -y \
+		apt-get remove -y \
 			git \
 			checkinstall \
 			make \
 			gcc \
 	&& \
-		apt-get autoremove -y
+		apt-get autoremove -y \
+	&& \
+# For some reason, autoremove removes these. But we do actually need them
+		apt-get install -y \
+			libsdl1.2-dev \
+			libsdl-ttf2.0-dev \
+			libsdl2-ttf-dev
 
-WORKDIR /whycon
 ENTRYPOINT /whycon/run
