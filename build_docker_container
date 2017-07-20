@@ -12,4 +12,4 @@
 ########################################
 ########################################
 docker build --no-cache -t pcess/whycon:latest .
-docker push
+docker push pcess/whycon

@@ -15,15 +15,12 @@
 # 
 ########################################
 ########################################
-# 
-# Get the directory of this file
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $DIR/whycon-orig/bin/
 for webcam in /dev/video* ; do
 
+	# Get the directory of this file
+	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 	# Now, in a separate terminal start a whycon instance for this camera. 
-	./whycon $webcam 1 nolog novideo &
+	gnome-terminal --working-directory=$DIR/whycon-orig/bin/ -e "./whycon $webcam 1 nolog novideo"
 
 done
-# Go back to the previous directory
-cd -
