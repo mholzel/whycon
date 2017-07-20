@@ -1,1 +1,0 @@
-./whycon /dev/video0 4 nolog novideo $1

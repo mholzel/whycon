@@ -1,3 +1,38 @@
+########################################
+########################################
+#
+# Use this script to build the libraries
+# on your local machine. You will need
+# to call it from sudo like this: 
+#
+# $ sudo ./build
+# 
+# If you are planning on using the 
+# Docker images, you should NEVER call 
+# this script. In fact, it is preferable
+# to use the Docker images since they 
+# have the prebuilt distro, and never 
+# require a build or setup (which is 
+# prone to error).
+# 
+# To use the Docker images and run 
+# whycon out of the box, just run the 
+# script: ./run_in_docker 
+# which should be in this directory.
+# That script will take care of 
+# everything for you.
+# 
+# If you really do want to build the 
+# code on your local machine, then you 
+# should only need to run this script 
+# once. If it was successful, then you 
+# can run whycon by calling the ./run 
+# script which is also in this 
+# directory.
+# 
+########################################
+########################################
+# 
 # Get the SDL libs and other stuff (on my system, yes you need 
 # these 3 redundant SDL libs to get it working out of the box)
 		apt-get update \
@@ -10,16 +45,15 @@
 			checkinstall \
 			make \
 			gcc \
-			v4l-utils \
 	&& \
-	# Build and install luvcview with checkinstall so that it is easily removable
+# Build and install luvcview with checkinstall so that it is easily removable
 		cd luvcview \
 	&& \
 		make \
 	&& \
 		checkinstall -y \
 	&& \
-	# Build whycon
+# Build whycon
 		cd ../whycon-orig/src/ \
 	&& \
 		make \

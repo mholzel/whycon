@@ -1,0 +1,41 @@
+########################################
+########################################
+#
+# This script is the preferred way of
+# running whycon. Specifically, this 
+# script will start a Docker container
+# for each available webcam and run 
+# whycon in each of those containers. 
+#
+# You should be able to use this script
+# out of the box, without having to 
+# run any of the build scripts. Just 
+# note that when you are done with 
+# whycon, you should stop the containers 
+# by running the script 
+#
+# ./docker_stop_remove_all
+# 
+# since closing the docker terminals is 
+# note enough to ensure a proper 
+# shutdown. 
+#
+########################################
+########################################
+
+# First, make sure that the x11 server is started. 
+# You need this to view the output of the cameras. 
+# If you don't want this, you can comment out this line
+# and the "env" and "volume commands to docker"
+xhost local:root
+
+# For each of the connected cameras, start a new docker container
+for webcam in /dev/video* ; do
+
+	# Now, in a separate terminal start a docker container for this camera
+	gnome-terminal -e "docker run -it \
+			    --env=\"DISPLAY\" \
+			    --volume=\"/tmp/.X11-unix:/tmp/.X11-unix:rw\" \
+			    --device=$webcam \
+			    pcess/whycon"
+done

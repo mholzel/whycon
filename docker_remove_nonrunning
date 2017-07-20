@@ -1,0 +1,28 @@
+########################################
+########################################
+#
+# This script removes all of the 
+# containers which have already been 
+# stopped. Specifically, if you ran 
+#
+# ./run_in_docker
+# 
+# and then you stopped the docker 
+# containers:
+#
+# ./docker_stop_all
+#
+# then this script will remove all of 
+# stopped containers. However, note that 
+# if you want to stop and remove the 
+# containers in one step, you can call 
+#
+# ./docker_stop_remove_all
+#
+# which executes both of these tasks 
+# for you.   
+#
+########################################
+########################################
+
+docker rm $(docker ps -q -f status=exited)

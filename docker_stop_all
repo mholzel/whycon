@@ -1,0 +1,34 @@
+########################################
+########################################
+#
+# This script shuts down your docker 
+# containers. You should call this once 
+# you are done using whycon. Note that 
+# just closing the terminal window does 
+# not stop the process.  
+# 
+# Furthermore, once you are done with 
+# this script, you will most likely want 
+# to call 
+#
+# ./docker_remove_nonrunning
+#
+# unless you plan to re-attach to the 
+# processes. If you don't know what I 
+# mean by "reattach", then you should 
+# definitely call the aforementioned 
+# script after this one. 
+# 
+# Finally, note that these scripts are 
+# called in succession inside 
+#
+# ./docker_stop_remove_all
+#
+# so that you can simply call that 
+# script instead of calling this one 
+# followed by the "remove" script.
+#
+########################################
+########################################
+
+docker stop $(docker ps -a -q)

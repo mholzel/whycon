@@ -1,3 +1,14 @@
+########################################
+########################################
+#
+# You should never need to call this 
+# file. This file is the script used to 
+# build the docker image. You 
+# should never be calling this unless 
+# you are the manager of that distro.
+# 
+########################################
+########################################
 FROM ubuntu
 
 # Get the SDL libs and other stuff (on my system, yes you need 
@@ -12,22 +23,30 @@ RUN 		apt-get update \
 			checkinstall \
 			make \
 			gcc \
-			v4l-utils \
 	&& \
-	# Now clone the necessary git repos into the current folder 
+# Now clone the necessary git repos into the current folder 
 		git clone https://github.com/pcess/whycon.git \
 	&& \
-	# Build and install luvcview with checkinstall so that it is easily removable
+# Build and install luvcview with checkinstall so that it is easily removable
 		cd whycon/luvcview \
 	&& \
 		make \
 	&& \
 		checkinstall -y \
 	&& \
-	# Build whycon
+# Build whycon
 		cd ../whycon-orig/src/ \
 	&& \
-		make
+		make \
+	&& \
+# We don't need a lot of those libraries now. Let's remove them to lighten the container.
+		apt-get purge -y \
+			git \
+			checkinstall \
+			make \
+			gcc \
+	&& \
+		apt-get autoremove -y
 
-WORKDIR /whycon/whycon-orig/bin
-#ENTRYPOINT ./run
+WORKDIR /whycon
+ENTRYPOINT /whycon/run
