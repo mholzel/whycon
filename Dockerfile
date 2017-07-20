@@ -12,6 +12,7 @@ RUN 		apt-get update \
 			checkinstall \
 			make \
 			gcc \
+			v4l-utils \
 	&& \
 	# Now clone the necessary git repos into the current folder 
 		git clone https://github.com/pcess/whycon.git \
@@ -26,17 +27,7 @@ RUN 		apt-get update \
 	# Build whycon
 		cd ../whycon-orig/src/ \
 	&& \
-		make \
-	&& \
-	# Now try to run it 
-		cd ../bin \
-	&& \
-	mkdir output \
-	&& \
-	touch run \
-	&& \
-	echo "./whycon /dev/video0 1" > run \
-	&& \
-	chmod +x run \
+		make
 
-#ENTRYPOINT ./whycon-orig/bin/run
+WORKDIR /whycon/whycon-orig/bin
+#ENTRYPOINT ./run

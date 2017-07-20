@@ -10,6 +10,7 @@
 			checkinstall \
 			make \
 			gcc \
+			v4l-utils \
 	&& \
 	# Build and install luvcview with checkinstall so that it is easily removable
 		cd luvcview \

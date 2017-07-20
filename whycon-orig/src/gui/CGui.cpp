@@ -170,20 +170,26 @@ void CGui::drawStats(int x, int y, STrackedObject o, bool D2) {
 	//	sprintf(info,"%.0f %.0f %.02f %.02f %.02f",x,y,d,phi,psi);
 	//sprintf(info,"%.3f %.3f %.3f",o.x,o.y,o.z);
 
+	sprintf(info, "draw stats 0");
 	if (D2) {
 		sprintf(info, "%02i %03i", o.ID, (int) (o.yaw / M_PI * 180));
 		text = TTF_RenderUTF8_Blended(smallFont, info, ok_col);
 		rect.y = y / scale - 14;
 		SDL_BlitSurface(text, NULL, screen, &rect);
 	}
+	sprintf(info, "draw stats 1");
 
 	if (D2)
 		sprintf(info, "%03.0f %03.0f", 1000 * o.x, 1000 * o.y);
 	else
 		sprintf(info, "%.3f %.3f %.3f", o.x, o.y, o.z);
+	sprintf(info, "draw stats 2");
 	text = TTF_RenderUTF8_Blended(smallFont, info, ok_col);
+	sprintf(info, "draw stats 3");
+
 	rect.y = y / scale;
 	SDL_BlitSurface(text, NULL, screen, &rect);
+	sprintf(info, "draw stats 4");
 
 	if (D2 == false) {
 		sprintf(info, "%.3f %.3f %.3f", o.pitch * (180.0 / M_PI),
@@ -192,7 +198,10 @@ void CGui::drawStats(int x, int y, STrackedObject o, bool D2) {
 		rect.y = y / scale + 12;
 		SDL_BlitSurface(text, NULL, screen, &rect);
 	}
+	sprintf(info, "draw stats 5");
 	SDL_FreeSurface(text);
+	sprintf(info, "draw stats 6");
+
 	/*sprintf(info,"%.3f %.3f %.3f",o.roll,o.pitch,o.yaw);
 	 text = TTF_RenderUTF8_Blended(smallFont, info, ok_col);
 	 rect.y = y/scale+15;
