@@ -15,7 +15,7 @@ FROM ubuntu
 # these 3 redundant SDL libs to get it working out of the box)
 RUN 		apt-get update \
 	&& \
- 		apt-get upgrade \
+ 		apt-get upgrade -y \
 	&& \
 		apt-get install -y \
 			libsdl1.2-dev \
@@ -55,3 +55,4 @@ RUN 		apt-get update \
 			libsdl-ttf2.0-dev \
 			libsdl2-ttf-dev \
 			git
+
