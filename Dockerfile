@@ -15,6 +15,8 @@ FROM ubuntu
 # these 3 redundant SDL libs to get it working out of the box)
 RUN 		apt-get update \
 	&& \
+ 		apt-get upgrade \
+	&& \
 		apt-get install -y \
 			libsdl1.2-dev \
 			libsdl-ttf2.0-dev \
@@ -41,7 +43,6 @@ RUN 		apt-get update \
 	&& \
 # We don't need a lot of those libraries now. Let's remove them to lighten the container.
 		apt-get remove -y \
-			git \
 			checkinstall \
 			make \
 			gcc \
@@ -52,6 +53,5 @@ RUN 		apt-get update \
 		apt-get install -y \
 			libsdl1.2-dev \
 			libsdl-ttf2.0-dev \
-			libsdl2-ttf-dev
-
-ENTRYPOINT /whycon/run
+			libsdl2-ttf-dev \
+			git
