@@ -2,11 +2,13 @@
 
 #define THICK_CROSS
 
-CGui::CGui(int wi, int he, int sc) {
+CGui::CGui(int wi, int he, int sc, char *ipaddress, int prt) {
 	averageTime = maxTime = numStats = 0;
 	height = he / sc;
 	width = wi / sc;
 	scale = sc;
+	ip = ipaddress;
+	port = prt;
 	SDL_Init(SDL_INIT_VIDEO | SDL_HWSURFACE | SDL_HWACCEL);
 	if (TTF_Init() == -1)
 		printf("Unable to initialize SDL_ttf: %s\n", TTF_GetError());
@@ -16,9 +18,11 @@ CGui::CGui(int wi, int he, int sc) {
 		fprintf(stderr, "Couldn't set SDL video mode: %s\r\n", SDL_GetError());
 	SDL_WM_SetCaption("WHYCON", "WhyCon localization system");
 	smallFont = TTF_OpenFont("../etc/font.ttf", 16);
+	largeFont = TTF_OpenFont("../etc/font.ttf", 24);
 	if (!smallFont)
 		printf("Unable to open font: %s\n", TTF_GetError());
 	TTF_SetFontStyle(smallFont, TTF_STYLE_NORMAL);
+	TTF_SetFontStyle(largeFont, TTF_STYLE_NORMAL);
 	num = 0;
 }
 
@@ -80,9 +84,9 @@ void CGui::drawTimeStats(int evalTime, int numBots) {
 	averageTime += evalTime;
 	numStats++;
 	//sprintf(info,"Tracking %i robots takes %.3f ms now, %.3f on average and %.3f ms max.",numBots,evalTime/1000.0,averageTime/1000.0/numStats,maxTime/1000.0);
-	sprintf(info, "             Tracking of %i robots took %.3f ms.", numBots,
+	sprintf(info, "IP Address: %s, port: %i. Tracking %i robot took %.3f ms.", ip, port, numBots,
 			evalTime / 1000.0);
-	text = TTF_RenderUTF8_Blended(smallFont, info, ok_col);
+	text = TTF_RenderUTF8_Blended(largeFont, info, ok_col);
 	rect.x = 0;
 	rect.y = 0;
 	SDL_BlitSurface(text, NULL, screen, &rect);

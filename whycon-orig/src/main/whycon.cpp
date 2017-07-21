@@ -299,9 +299,51 @@ void processArgs(int argc,char* argv[])
 	}
 }
 
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <ifaddrs.h>
+#include <unistd.h>
+#include <linux/if_link.h>
+
+/* Get the ipv4 address of the device. */
+void getIPv4(char * ip){
+
+    struct ifaddrs *ifaddr, *ifa;
+    int family, s, n;
+    if (getifaddrs(&ifaddr) == -1) {
+        perror("getifaddrs");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Walk through linked list, maintaining head pointer so we
+       can free list later */
+    for (ifa = ifaddr, n = 0; ifa != NULL; ifa = ifa->ifa_next, n++) {
+        if (ifa->ifa_addr == NULL)
+            continue;
+
+        family = ifa->ifa_addr->sa_family;
+
+        /* For an AF_INET* interface address, display the address */
+        if (family == AF_INET) {
+            s = getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in),
+                    ip, NI_MAXHOST,
+                    NULL, 0, NI_NUMERICHOST);
+            if (s == 0) {
+            	/* Do not include private IPs, that is, things starting with 10.,127.,172., or 192.*/
+            	if (strncmp(ip,"10",2)!= 0 && strncmp(ip,"127",3)!= 0 && strncmp(ip,"172",3)!= 0 && strncmp(ip,"192",3)!= 0){
+            		return;
+            	}
+            }
+        }
+    }
+    freeifaddrs(ifaddr);
+
+}
 
 int main(int argc,char* argv[])
 {
+
 	//initialize logging system, camera and network connection 
 	processArgs(argc,argv);
 	if (saveLog) initializeLogging();
@@ -323,7 +365,12 @@ int main(int argc,char* argv[])
 	while (imageHeight/guiScale > screenHeight || imageHeight/guiScale > screenWidth) guiScale = guiScale*2;
 
 	//initialize GUI, image structures, coordinate transformation modules
-	if (useGui) gui = new CGui(imageWidth,imageHeight,guiScale);
+    char ip[NI_MAXHOST];
+	if (useGui) {
+		/* Get the ip address so that we can inform the user. */
+		getIPv4(ip);
+		gui = new CGui(imageWidth,imageHeight,guiScale,ip,port);
+	}
 	image = new CRawImage(imageWidth,imageHeight);
 	trans = new CTransformation(imageWidth,imageHeight,circleDiameter,true);
 	trans->transformType = TRANSFORM_NONE;		//in our case, 2D is the default

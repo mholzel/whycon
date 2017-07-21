@@ -10,7 +10,7 @@
 class CGui
 {
 public:
-  CGui(int wi,int he,int scale);
+  CGui(int wi,int he,int scale,char*ip,int prt);
   ~CGui();
 
   void drawImage(CRawImage* image);
@@ -27,8 +27,9 @@ public:
 
 private:
   SDL_Surface *screen;
-  int width,height,scale;
-  TTF_Font *smallFont;
+  int width,height,scale,port;
+  char* ip;
+  TTF_Font *smallFont, *largeFont;
   int averageTime,maxTime,numStats,num;	
 };
 
