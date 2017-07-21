@@ -1,0 +1,15 @@
+########################################
+########################################
+#
+# You should never need to call this 
+# file. This file is simply a 
+# convenience script used to facilitate 
+# a rebuild of the docker image, and 
+# push that image to docker hub. You 
+# should never be calling this unless 
+# you are the manager of that distro
+# 
+########################################
+########################################
+docker build --no-cache -t pcess/whycon-base:latest .
+docker push pcess/whycon-base:latest
