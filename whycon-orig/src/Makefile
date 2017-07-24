@@ -4,17 +4,17 @@ SUBDIRS+=camera
 SUBDIRS+=imageproc
 SUBDIRS+=gui
 
-OBJS=$(wildcard ../obj/*.o)
+OBJS=$(wildcard obj/*.o)
 LXXLIBS+=-L/usr/local/lib
 LXXLIBS+=-lpthread
 
 COPY_ETC_CMD=../etc/copy.sh
 COPY_ETC_SRC=../etc
-COPY_ETC_DST=../bin
+COPY_ETC_DST=bin
 
 whycon: all obj
 	$(MAKE) -C main $@; \
-	$(CXX) $(CXXDEFINE) -o ../bin/$@  $(OBJS) main/$@.o $(CXXFLAGS) $(LXXLIBS) -lSDL -lSDL_ttf 
+	$(CXX) $(CXXDEFINE) -o bin/$@  $(OBJS) main/$@.o $(CXXFLAGS) $(LXXLIBS) -lSDL -lSDL_ttf 
 
 all:
 	echo $(OPSYS)
@@ -26,33 +26,33 @@ all:
 
 gui: all
 	$(MAKE) -C gui all; \
-	cp gui/*.o ../obj; \
+	cp gui/*.o obj; \
 
 cleangui:
 	$(MAKE) -C gui clean; \
-	rm -f ../obj/CGui.o
+	rm -f obj/CGui.o
 
 obj: all
 	echo "Copy objs"
 	@for i in $(SUBDIRS) ;\
 	do \
 	echo "coping all in $(CURRENT_DIR)/$$i..."; \
-	cp $$i/*.o ../obj; \
+	cp $$i/*.o obj; \
 	done
 
-../bin/.etc:
+bin/.etc:
 	echo "Copy dirs from etc"
 	$(COPY_ETC_CMD) $(COPY_ETC_SRC) $(COPY_ETC_DST)
-	touch ../bin/.etc
+	touch bin/.etc
 
 cleanetc:
-	rm -f ../bin/.etc	
+	rm -f bin/.etc	
 
-	#cp -r ../etc/$$i ../bin; 
+	#cp -r ../etc/$$i bin; 
 forceetc:
 	echo "Copy dirs from etc"
 	$(COPY_ETC_CMD) $(COPY_ETC_SRC) $(COPY_ETC_DST)
-	touch ../bin/.etc
+	touch bin/.etc
 
 clean: cleangui
 	echo $(OPSYS)
@@ -63,6 +63,6 @@ clean: cleangui
 	done
 	$(MAKE) -C main clean; \
 	echo "cleaning all objs"
-	rm -f ../obj/*.o
+	rm -f obj/*.o
 	echo "cleaning binaries"
-	rm -f ../bin/*
+	rm -f bin/whycon

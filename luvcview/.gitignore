@@ -3,4 +3,4 @@ description-pak
 luvcview
 *.deb
 *.tgz
-
+*.o

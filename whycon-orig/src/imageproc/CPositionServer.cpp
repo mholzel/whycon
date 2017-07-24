@@ -142,7 +142,7 @@ int CPositionServer::sendInfo(int connid,char* buffer)
 
 void CPositionServer::clearToSend(SSegment *currentSegmentArray)
 {
-	char buffer[10000];
+	char * buffer = new char[1000]();
 
 	/*send robot positions*/
 	STrackedObject o;
@@ -158,6 +158,7 @@ void CPositionServer::clearToSend(SSegment *currentSegmentArray)
 		sprintf(buffer,"%sCalibrated\n",buffer);
 		calibrationFinished = false;
 	}
+	printf(buffer);
 	sem_wait(&connectSem);
 	for (int i = 0;i<numConnections;i++) sendInfo(i,buffer);
 	sem_post(&connectSem);
