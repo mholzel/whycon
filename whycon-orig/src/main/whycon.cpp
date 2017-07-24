@@ -11,6 +11,14 @@
 #include <SDL/SDL.h>
 #include "CPositionServer.h"
 
+/*Stuff used only for the purpose of grabbing the IP address. */
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <ifaddrs.h>
+#include <unistd.h>
+#include <linux/if_link.h>
+
 //-----These parameters need to be adjusted by the user -----------------------
 
 //Adjust camera resolution here
@@ -71,6 +79,11 @@ bool drawCoords = true;		//draws coordinatess at the robot's positions
 int runs = 0;			//number of gui updates/detections performed 
 int evalTime = 0;		//time required to detect the patterns
 FILE *robotPositionLog = NULL;	//file to log robot positions
+
+/* The ip address of the host. If this is not specified, then we will try to find it.
+ * You can almost always leave it unspecified. However, you will need to explictly state it inside a docker container.*/
+bool ipSpecified = false;
+char ip[NI_MAXHOST];
 
 /* You should specify the port number. If you are only running one camera, then this default should be fine. */
 int port = 8123;
@@ -321,11 +334,23 @@ bool isNumber(char number[]) {
 	if (number[0] == '-')
 		i = 1;
 	for (; number[i] != 0; i++) {
-		//if (number[i] > '9' || number[i] < '0')
 		if (!isdigit(number[i]))
 			return false;
 	}
 	return true;
+}
+
+/** Determine if the argument is an ip address */
+bool isIP(char number[]) {
+	int i = 0;
+	for (; number[i] != 0; i++) {
+		if (!isdigit(number[i]) && number[i] != '.')
+			return false;
+	}
+	if (i>7)
+		return true;
+	else
+		return false;
 }
 
 //process command line arguments
@@ -343,15 +368,12 @@ void processArgs(int argc, char* argv[]) {
 			saveVideo = false;
 		if (isNumber(argv[i]))
 			port = atoi(argv[i]);
+		if (isIP(argv[i])){
+			ipSpecified = true;
+			strcpy(ip, argv[i]);
+		}
 	}
 }
-
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <ifaddrs.h>
-#include <unistd.h>
-#include <linux/if_link.h>
 
 /** Get the ipv4 address of the device. */
 void getIPv4(char * ip) {
@@ -420,10 +442,10 @@ int main(int argc, char* argv[]) {
 		guiScale = guiScale * 2;
 
 //initialize GUI, image structures, coordinate transformation modules
-	char ip[NI_MAXHOST];
 	if (useGui) {
 		/* Get the ip address so that we can inform the user. */
-		getIPv4(ip);
+		if (!ipSpecified)
+			getIPv4(ip);
 		gui = new CGui(imageWidth, imageHeight, guiScale, ip, port);
 	}
 	image = new CRawImage(imageWidth, imageHeight);
