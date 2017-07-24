@@ -9,7 +9,7 @@
 # 
 ########################################
 ########################################
-FROM pcess/whycon-base
+FROM pcess/whycon:base
 
 # Clone the necessary git repos into the current folder 
 RUN 		git clone https://github.com/pcess/whycon.git \
