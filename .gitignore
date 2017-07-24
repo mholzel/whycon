@@ -1,6 +1,7 @@
 
 # Ignore all C build files
 *.o
+*.cfg
 
 # Ignore the generated video and log files 
 *.avi
