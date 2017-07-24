@@ -22,6 +22,6 @@ RUN 		git clone https://github.com/pcess/whycon.git \
 		checkinstall -y \
 	&& \
 # Build whycon
-		cd ../whycon-orig/src/ \
+		cd ../whycon-orig \
 	&& \
 		make 
